@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -Wall #-}
 {-
 Name: Arunram A
 Notes: <any particular notes about your work -- what you struggled with,
@@ -81,7 +82,7 @@ numMatchedElements acc (t:ts) (s:ss)
 -- called by wordFitsTemplate (Test cases covered in that)
 extractLetters :: Template -> String -> String
 extractLetters [] ss = ss
-extractLetters ts [] = []
+extractLetters _ [] = []
 extractLetters (t:ts) ss = extractLetters ts (delete t ss)
 
 -- finds all words that match a given template, with a hand of tiles
