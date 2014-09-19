@@ -8,6 +8,9 @@ http://www.seas.upenn.edu/~cis194/hw/02-dict.pdf
 Also available at https://www.dropbox.com/s/4ytftmey6nmcd18/02-dict.pdf?dl=0        
 -}
 
+-- Ran hlint HW01.hs and suggestions applied
+
+
 module HW02 where
 
 import Words
@@ -53,7 +56,7 @@ wordsFrom hs =  [w | w <- allWords, formableBy w hs]
 
 wordFitsTemplate :: Template -> Hand -> String -> Bool
 wordFitsTemplate t h s 
-    | (length t /= length s || templateMismatch t s)   = False
+    | length t /= length s || templateMismatch t s   = False
     | otherwise                             = formableBy (extractLetters t s) h
 -- Test Cases
 -- wordFitsTemplate "??r?" ['c','x','e','a','b','c','l'] "care" == True
@@ -68,7 +71,7 @@ templateMismatch t s = (length t - count '?' t) /= numMatchedElements 0 t s
 
 -- count function to count a specific element in a given list
 count :: Eq a => a -> [a] -> Int
-count c = length . filter (\x -> x == c)
+count c = length . filter (== c)
 
 -- numMatchedElements compares template and string, gives total matched char.
 numMatchedElements :: Int -> Template -> String -> Int
@@ -110,12 +113,13 @@ bestWords ss = map (ss !!) (maxScores $ map scrabbleValueWord ss)
 
 maxScores :: Ord a => [a] -> [Int]
 maxScores [] = []
-maxScores ss = findIndices (== maximum ss) ss
+-- maxScores ss = findIndices (== maximum ss) ss
+maxScores ss = elemIndices (maximum ss) ss
 
 -- given a S Template and a word, calculate the score
 scrabbleValueTemplate :: STemplate -> String -> Int
-scrabbleValueTemplate st w = (wordMultiplier 1 st) * (sum (zipWith (*) 
-                             (map scrabbleValue w) (valueMultiplier st)))
+scrabbleValueTemplate st w = wordMultiplier 1 st * sum (zipWith (*) 
+                             (map scrabbleValue w) (valueMultiplier st))
 -- Test Cases
 -- scrabbleValueTemplate "?e??3" "peace" == 27
 -- scrabbleValueTemplate "De?2?" "peace" == 24
@@ -136,4 +140,18 @@ wordMultiplier prod (x:xs)
     | otherwise = 1 * wordMultiplier prod xs
     
 
+-- The following functions are additional; not from the given exercise
 
+-- given a string, form possible words using all letters given
+unJumble :: String -> [String]
+unJumble x = filter (matchLength (length x)) $ wordsFrom x
+-- Test Cases
+-- unJumble "neplci" == ["pencil"]
+-- unJumble "miet" == ["emit","item","mite","time"]   
+   
+-- filtering function used by unJumble   
+matchLength :: Int -> [a] -> Bool
+matchLength x a
+    | length a == x = True
+    | otherwise = False
+    

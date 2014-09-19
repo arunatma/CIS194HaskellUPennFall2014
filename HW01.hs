@@ -4,6 +4,8 @@ import Data.List
 -- Solutions for http://www.seas.upenn.edu/~cis194/hw/01-intro.pdf
 -- https://www.dropbox.com/s/rkccfj41hwpqhps/01-intro.pdf?dl=0
 
+-- Ran hlint HW01.hs and suggestions applied
+
 lastDigit :: Integer -> Integer
 lastDigit x = x `mod` 10 
 
@@ -19,7 +21,7 @@ toDigits x
 interleave :: [a] -> [a] -> [a]
 interleave _ [] = []
 interleave [] _ = []
-interleave (x:xs) (y:ys) = x : y : (interleave xs ys)
+interleave (x:xs) (y:ys) = x : y : interleave xs ys
     
 doubleEveryOther :: [Integer] -> [Integer]
 doubleEveryOther xs = reverse $ 
@@ -33,7 +35,7 @@ validate :: Integer -> Bool
 validate x 
     | reminder == 0 = True
     | otherwise = False
-    where reminder = (sumDigits $ doubleEveryOther $ toDigits x) `mod` 10
+    where reminder = sumDigits (doubleEveryOther $ toDigits x) `mod` 10
     
 
 type Peg = String
