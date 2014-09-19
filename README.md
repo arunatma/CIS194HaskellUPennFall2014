@@ -9,7 +9,9 @@ An attempt to solve Home Work problems of
     
     
 HW Questions:
-* 1. Week 1: https://www.dropbox.com/s/rkccfj41hwpqhps/01-intro.pdf?dl=0
-* 2. Week 2: https://www.dropbox.com/s/4ytftmey6nmcd18/02-dict.pdf?dl=0
+* Week 1: https://www.dropbox.com/s/rkccfj41hwpqhps/01-intro.pdf?dl=0
+* Week 2: https://www.dropbox.com/s/4ytftmey6nmcd18/02-dict.pdf?dl=0
+* Week 3: https://www.dropbox.com/s/gfpf4983y4mw2m5/03-ADTs.pdf?dl=0
+* Week 4: https://www.dropbox.com/s/fnresmy6en1m6sx/04-poly.pdf?dl=0
 
 
