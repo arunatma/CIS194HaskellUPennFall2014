@@ -1,4 +1,4 @@
--- {-# OPTIONS_GHC -Wall #-}
+{-# OPTIONS_GHC -Wall #-}
 {-
 Name: Arunram A
 This is the solutions file for: (Week 3)
@@ -34,8 +34,8 @@ processWords xs = InvalidLM (unwords xs)
 validMessagesOnly :: [MaybeLogMessage] -> [LogMessage]
 validMessagesOnly [] = []
 validMessagesOnly (x:xs) = case x of
-    ValidLM x -> x : validMessagesOnly xs 
-    InvalidLM x -> validMessagesOnly xs 
+    ValidLM lm   -> lm : validMessagesOnly xs 
+    InvalidLM _ -> validMessagesOnly xs 
     
 parse :: String -> [LogMessage]
 parse x = validMessagesOnly $ map parseMessage (lines x)
@@ -67,27 +67,43 @@ sortMessages :: [LogMessage] -> [LogMessage]
 sortMessages = sortBy (compareMsgs)
 
 -- extract only the error messages with severity of at least 50
-whatWentWrong :: [LogMessage] -> [String]
-whatWentWrong xs = filter (/=[]) (map whatsWrong (sortMessages xs))
+processWrongLogs :: [LogMessage] -> [String]
+processWrongLogs [] = []
+processWrongLogs (x:xs) 
+    | whatsWrong x  = (msgText x) : processWrongLogs xs
+    | otherwise     = processWrongLogs xs 
 
-whatsWrong :: LogMessage -> String
-whatsWrong (LogMessage Info _ _) = []
-whatsWrong (LogMessage Warning _ _) = []
-whatsWrong (LogMessage (Error s) t msg) = if s >= 50 then (msg) else []
+whatWentWrong :: [LogMessage] -> [String]
+whatWentWrong xs = processWrongLogs (sortMessages xs)
+
+whatsWrong :: LogMessage -> Bool
+whatsWrong (LogMessage Info _ _) = False
+whatsWrong (LogMessage Warning _ _) = False
+whatsWrong (LogMessage (Error s) _ _) = if s >= 50 then True else False
 -- try giving    testWhatWentWrong  parse whatWentWrong "error.log" in ghci
 
 -- filter out LogMessages containing the given string
 messagesAbout :: String -> [LogMessage] -> [LogMessage]
 messagesAbout _ [] = []
 messagesAbout t (x:xs)
-    | stringExists  = x : messagesAbout t xs
-    | otherwise     = messagesAbout t xs
-    where stringExists = isInfixOf (map toLower t) (map toLower (msgText x))
+    | stringExists t x  = x : messagesAbout t xs
+    | otherwise         = messagesAbout t xs
+    
+stringExists :: String -> LogMessage -> Bool
+stringExists t x = isInfixOf (map toLower t) (map toLower (msgText x))    
     
 -- filter out LogMessages containing the given string 
 -- or logged with high severity    
 whatWentWrongEnhanced :: String -> [LogMessage] -> [String]
+whatWentWrongEnhanced _ [] = [] 
+whatWentWrongEnhanced t (x:xs) 
+    | combinedPredicate t x = (msgText x) : (whatWentWrongEnhanced t xs)
+    | otherwise             = whatWentWrongEnhanced t xs
+    where combinedPredicate t' x' = (|||) whatsWrong (stringExists t') x'
+-- try the following command on ghci
+-- testWhatWentWrong parse (whatWentWrongEnhanced "relish") "error.log"
 
+-- function that combines both conditions using logical OR (||) 
 (|||) :: (LogMessage -> Bool) -> (LogMessage -> Bool) -> LogMessage -> Bool
 (|||) f g x = f x || g x
 
