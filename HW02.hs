@@ -8,7 +8,7 @@ http://www.seas.upenn.edu/~cis194/hw/02-dict.pdf
 Also available at https://www.dropbox.com/s/4ytftmey6nmcd18/02-dict.pdf?dl=0        
 -}
 
--- Ran hlint HW01.hs and suggestions applied
+-- Ran hlint HW02.hs and suggestions applied
 
 
 module HW02 where
